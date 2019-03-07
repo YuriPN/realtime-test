@@ -8,7 +8,8 @@ class UploadFile extends Component{
     constructor(props){
         super(props)
         this.state = {
-            file: 'Insira o texto aqui'
+            file: "Insira seu texto aqui",
+            userName: 'User1'
         }
 
         this.optionsToMammoth = {
@@ -39,12 +40,17 @@ class UploadFile extends Component{
         
         reader.readAsArrayBuffer(file);
     }
+    handleUser = (username) =>{
+        this.setState({
+            userName: username
+        });
+    }
     render(){
         
         return(
             <div id='divMain'>
-                <input type='file' id = "FileUpload" onChange={this.handleFile}></input>
-                <TinyEditor content={this.state.file} />
+                <input type='file' id = "FileUpload" onChange={ this.handleFile }></input>
+                <TinyEditor content={this.state.file} username={this.state.userName}/>
             </div>
             
         );
