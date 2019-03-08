@@ -19,10 +19,20 @@ class UploadFile extends Component{
         }
 
         this.handleFile = this.handleFile.bind(this)
-        this.getHtml = this.getHtml.bind(this)
+        this.convertToHtml = this.convertToHtml.bind(this)
     }
 
-    getHtml = (e) => {
+    
+    
+    handleFile = (e) =>{
+        var file = e.target.files[0];
+        var reader = new FileReader();
+
+        reader.onload = this.convertToHtml
+        
+        reader.readAsArrayBuffer(file);
+    }
+    convertToHtml = (e) => {
         mammoth.convertToHtml({arrayBuffer: e.target.result}, this.optionsToMammoth)
                 .then( (result) =>{
                     this.setState({
@@ -30,21 +40,14 @@ class UploadFile extends Component{
                     });
                 }) 
     }
-    
-    handleFile = (e) =>{
-        var file = e.target.files[0];
-        var reader = new FileReader();
-
-        reader.onload = this.getHtml
-        
-        reader.readAsArrayBuffer(file);
-    }
     render(){
         
         return(
             <div id='divMain'>
-                <input type='file' id = "FileUpload" onChange={ this.handleFile }></input>
+                
                 <TinyEditor content={this.state.file} />
+
+                <input type='file' id = "FileUpload" onChange={ this.handleFile }></input>
             </div>
             
         );

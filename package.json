@@ -4,6 +4,8 @@
   "private": true,
   "homepage": "https://YuriPN.github.io/realtime-test/",
   "dependencies": {
+    "@tinymce/tinymce-react": "^1.0.0",
+    "mammoth": "^1.0.0",
     "gh-pages": "^2.0.1",
     "react": "^16.8.3",
     "react-dom": "^16.8.3",

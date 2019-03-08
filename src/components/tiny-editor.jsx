@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Editor} from '@tinymce/tinymce-react';
+import {Templates} from '../components/templates';
 
 class TinyEditor extends Component{
     constructor(props){
@@ -17,9 +18,8 @@ class TinyEditor extends Component{
     render(){
         return(
             <Editor 
-                    selector= 'textarea'
                     value={ this.props.content }
-                    apiKey = '11mawuf4s296afp379jcddiaf0t6bb1buhxyipc2xwzfgeb5'
+                    autosave_interval = "20s"
                     init={{
                         external_plugins: {"wave": "https://cdn2.codox.io/waveTinymce/plugin.min.js"},
                         wave: {
@@ -28,10 +28,11 @@ class TinyEditor extends Component{
                             "apiKey": "ee85b096-0af6-46b3-b3f5-4886d2e8a081" // this is your actual API Key
                         },
                         plugins: [
-                            'autoresize print preview fullpage searchreplace autolink directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern visualblocks'
+                            'code template autoresize print preview fullpage searchreplace autolink directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern visualblocks autosave'
                         ],
                         contextmenu: "link image imagetools table spellchecker",
-                        toolbar: 'spellchecker formatselect | bold italic forecolor | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent  | removeformat | code | visualblocks | addcomment',
+                        toolbar: 'code spellchecker formatselect | bold italic forecolor | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent  | removeformat | code | template | image | restoredraft',
+                        templates: Templates
                     }}
                 onChange={this.handleEditorChange}
             />
