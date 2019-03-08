@@ -23,7 +23,7 @@ class TinyEditor extends Component{
                     init={{
                         external_plugins: {"wave": "https://cdn2.codox.io/waveTinymce/plugin.min.js"},
                         wave: {
-                            "docId": "doc1", // unique document id,
+                            "docId": "doc2", // unique document id,
                             "username": "Yuri", // unique username or email address
                             "apiKey": "ee85b096-0af6-46b3-b3f5-4886d2e8a081" // this is your actual API Key
                         },
