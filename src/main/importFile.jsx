@@ -9,7 +9,7 @@ class UploadFile extends Component{
     constructor(props){
         super(props)
         this.state = {
-            file: "Insira seu texto aqui",
+            file: "",
             content: "",
             docId: "doc1",
             userName: 'User-' + Math.round((Math.random() * 100) + 1),
@@ -28,13 +28,13 @@ class UploadFile extends Component{
         this.getDocument()
 
         this.handleFile = this.handleFile.bind(this)
-        this.getHtml = this.getHtml.bind(this)
+        this.convertToHtml = this.convertToHtml.bind(this)
         this.getDocument = this.getDocument.bind(this)
         this.handleEditorChange = this.handleEditorChange.bind(this)
         this.saveContent = this.saveContent.bind(this)
     }
 
-    getHtml = (e) => {
+    convertToHtml = (e) => {
         mammoth.convertToHtml({arrayBuffer: e.target.result}, this.optionsToMammoth)
                 .then( (result) =>{
                     this.setState({
@@ -68,7 +68,9 @@ class UploadFile extends Component{
         this.setState({ saveLoading: true })
 
         let isSaved = FirebaseService.updateDocument( this.state.docId, this.state.content )
-
+        if (isSaved){
+            console.log('sucesso')
+        }
         this.setState({ saveLoading: false })
     }
 
@@ -83,10 +85,7 @@ class UploadFile extends Component{
                     <div className="input-group mb-3">
                         <div className="custom-file">
                             <label className="custom-file-label" htmlFor="inputGroupFile02" aria-describedby="inputGroupFileAddon02">Choose file</label>
-                            <input type="file" id="FileUpload" className="custom-file-input" id="inputGroupFile02" onChange={ this.handleFile }/>
-                        </div>
-                        <div className="input-group-append">
-                            <span className="input-group-text" id="inputGroupFileAddon02">Upload</span>
+                            <input type="file" id="FileUpload" className="custom-file-input" onChange={ this.handleFile }/>
                         </div>
                     </div>
                 </div>
@@ -94,8 +93,7 @@ class UploadFile extends Component{
                     <TinyEditor 
                         content={ this.state.file } 
                         handleEditorChange= { this.handleEditorChange }
-                        docId={ this.state.docId }
-                        userName={ this.state.userName }
+                        username={'user'+ Math.round((Math.random() * 100) + 1)}
                     />
                 </div>
             </div>

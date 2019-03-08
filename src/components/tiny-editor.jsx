@@ -4,17 +4,18 @@ import {Templates} from '../components/templates';
 
 class TinyEditor extends Component{
 
+    
     render(){
+        var waveConfig = this.props.username
         return(
             <Editor 
-                selector= 'textarea'
                 value={ this.props.content }
                 apiKey = '11mawuf4s296afp379jcddiaf0t6bb1buhxyipc2xwzfgeb5'
                 init={{
                     external_plugins: {"wave": "https://cdn2.codox.io/waveTinymce/plugin.min.js"},
                     wave: {
-                        "docId": this.props.docId, // unique document id,
-                        "username": this.props.userName, // unique username or email address
+                        "docId": "doc2", // unique document id
+                        "username": waveConfig, // unique username or email address
                         "apiKey": "ee85b096-0af6-46b3-b3f5-4886d2e8a081" // this is your actual API Key
                     },
                     plugins: [
