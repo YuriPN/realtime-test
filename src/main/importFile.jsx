@@ -1,14 +1,21 @@
-import React, {Component} from 'react';
-import TinyEditor from '../components/tiny-editor';
-var mammoth = require('mammoth');
+import React, {Component} from 'react'
+import mammoth from 'mammoth'
 
+import FirebaseService from '../services/firebaseService'
+import TinyEditor from '../components/tiny-editor'
 
 class UploadFile extends Component{
     
     constructor(props){
         super(props)
         this.state = {
-            file: "Insira seu texto aqui"
+            file: "Insira seu texto aqui",
+            content: "",
+            docId: "doc1",
+            userName: 'User-' + Math.round((Math.random() * 100) + 1),
+            saveLoading: false,
+            saveMessage: '',
+            saveSuccess: undefined
         }
 
         this.optionsToMammoth = {
@@ -18,38 +25,83 @@ class UploadFile extends Component{
             ]
         }
 
+        this.getDocument()
+
         this.handleFile = this.handleFile.bind(this)
         this.getHtml = this.getHtml.bind(this)
+        this.getDocument = this.getDocument.bind(this)
+        this.handleEditorChange = this.handleEditorChange.bind(this)
+        this.saveContent = this.saveContent.bind(this)
     }
 
     getHtml = (e) => {
         mammoth.convertToHtml({arrayBuffer: e.target.result}, this.optionsToMammoth)
                 .then( (result) =>{
                     this.setState({
-                        file:result.value
-                    });
-                }) 
+                        file: result.value
+                    })
+                })
+    }
+
+    getDocument = async () => {
+        var document = await FirebaseService.getDocument( this.state.docId )
+        var content = document.content
+        this.setState({
+            file: content
+        })
     }
     
     handleFile = (e) =>{
-        var file = e.target.files[0];
-        var reader = new FileReader();
+        var file = e.target.files[0]
+        var reader = new FileReader()
 
         reader.onload = this.getHtml
         
-        reader.readAsArrayBuffer(file);
+        reader.readAsArrayBuffer(file)
     }
+
+    handleEditorChange(content){
+        this.setState({ content: content })
+    }
+
+    saveContent(){
+        this.setState({ saveLoading: true })
+
+        let isSaved = FirebaseService.updateDocument( this.state.docId, this.state.content )
+
+        this.setState({ saveLoading: false })
+    }
+
     render(){
         
         return(
-            <div id='divMain'>
-                <input type='file' id = "FileUpload" onChange={ this.handleFile }></input>
-                <TinyEditor content={this.state.file} />
+            <div id='divMain' className="container-fluid mt-2 justify-content-center row">
+                <div className="col-md-12 text-right m-2">
+                    <button type="button" className="btn btn-outline-success" onClick={ this.saveContent }>Salvar</button>
+                </div>
+                <div className="col-md-4">
+                    <div className="input-group mb-3">
+                        <div className="custom-file">
+                            <label className="custom-file-label" htmlFor="inputGroupFile02" aria-describedby="inputGroupFileAddon02">Choose file</label>
+                            <input type="file" id="FileUpload" className="custom-file-input" id="inputGroupFile02" onChange={ this.handleFile }/>
+                        </div>
+                        <div className="input-group-append">
+                            <span className="input-group-text" id="inputGroupFileAddon02">Upload</span>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-md-10">
+                    <TinyEditor 
+                        content={ this.state.file } 
+                        handleEditorChange= { this.handleEditorChange }
+                        docId={ this.state.docId }
+                        userName={ this.state.userName }
+                    />
+                </div>
             </div>
-            
-        );
+        )
     }
     
 }
 
-export default UploadFile;
+export default UploadFile
