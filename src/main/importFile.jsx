@@ -55,7 +55,7 @@ class UploadFile extends Component{
         var file = e.target.files[0]
         var reader = new FileReader()
 
-        reader.onload = this.getHtml
+        reader.onload = this.convertToHtml
         
         reader.readAsArrayBuffer(file)
     }
