@@ -8,3 +8,8 @@ export const INITIAL_STATE = {
     changes: [],
     user: ''
 }
+
+export const getElementOfAJsonObjectInReverse = (json, index) => {
+    var lastKey = Object.keys(json).sort().reverse()[index];
+    return json[lastKey];
+}

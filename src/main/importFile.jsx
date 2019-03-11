@@ -3,6 +3,7 @@ import mammoth from 'mammoth'
 
 import FirebaseService from '../services/firebaseService'
 import TinyEditor from '../components/tiny-editor'
+import { getElementOfAJsonObjectInReverse } from '../utils/document'
 
 class UploadFile extends Component{
     
@@ -15,7 +16,8 @@ class UploadFile extends Component{
             userName: 'User-' + Math.round((Math.random() * 100) + 1),
             saveLoading: false,
             saveMessage: '',
-            saveSuccess: undefined
+            saveSuccess: undefined,
+            documents: undefined
         }
 
         this.optionsToMammoth = {
@@ -44,10 +46,12 @@ class UploadFile extends Component{
     }
 
     getDocument = async () => {
-        var document = await FirebaseService.getDocument( this.state.docId )
-        var content = document.content
+        var documents = await FirebaseService.getDocument( this.state.docId )
+        var first = 0
+        var content = getElementOfAJsonObjectInReverse( documents, first ).content
         this.setState({
-            file: content
+            file: content,
+            documents: documents
         })
     }
     
@@ -93,7 +97,7 @@ class UploadFile extends Component{
                     <TinyEditor 
                         content={ this.state.file } 
                         handleEditorChange= { this.handleEditorChange }
-                        username={'user'+ Math.round((Math.random() * 100) + 1)}
+                        username={ this.state.userName }
                     />
                 </div>
             </div>

@@ -4,6 +4,7 @@ export default class FirebaseService {
 
     static getOneData = async (path, id) => {
         const query = firebaseDatabase.ref(path).child(id)
+
         const snapshot = await query.once('value')
         const value = snapshot.val()
 
@@ -19,7 +20,7 @@ export default class FirebaseService {
     };
 
     static updateDocument = async (idDocument, document) => {
-        var pathOfCollectionDocuments = 'documents_test'
+        var pathOfCollectionDocuments = 'documents'
 
         try {
             
