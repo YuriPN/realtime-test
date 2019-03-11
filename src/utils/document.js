@@ -9,7 +9,11 @@ export const INITIAL_STATE = {
     user: ''
 }
 
-export const getElementOfAJsonObjectInReverse = (json, index) => {
-    var lastKey = Object.keys(json).sort().reverse()[index];
-    return json[lastKey];
+export const getElementOnArrayInReverse = (array, index) => {
+    var reverseArray = array.reverse()
+    return reverseArray[ index ]
+}
+
+export const objectToArray = ( object ) => {
+    return Object.values( object )
 }

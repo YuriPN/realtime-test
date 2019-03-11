@@ -11,6 +11,12 @@ export default class FirebaseService {
         return value
     }
 
+    static listenIfChildAdded = (path, id, callback) => {
+        const query = firebaseDatabase.ref(path).child(id)
+
+        query.on("child_added", callback);
+    }
+
     static getDocument = async (id) => {
         
         const pathOfCollectionDocuments = 'documents'
@@ -19,7 +25,7 @@ export default class FirebaseService {
         return document
     };
 
-    static updateDocument = async (idDocument, document) => {
+    static updateDocument = async (idDocument, document, userName) => {
         var pathOfCollectionDocuments = 'documents'
 
         try {
@@ -30,7 +36,8 @@ export default class FirebaseService {
             
             newDocument.set({
                 content: document,
-                created: new Date().toISOString()
+                created: new Date().toISOString(),
+                user: userName
             })
         } catch (error) {
             return false

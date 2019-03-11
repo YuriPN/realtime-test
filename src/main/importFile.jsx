@@ -3,7 +3,9 @@ import mammoth from 'mammoth'
 
 import FirebaseService from '../services/firebaseService'
 import TinyEditor from '../components/tiny-editor'
-import { getElementOfAJsonObjectInReverse } from '../utils/document'
+import { getElementOnArrayInReverse, objectToArray } from '../utils/document'
+
+import Histories from '../components/histories/histories'
 
 class UploadFile extends Component{
     
@@ -17,7 +19,7 @@ class UploadFile extends Component{
             saveLoading: false,
             saveMessage: '',
             saveSuccess: undefined,
-            documents: undefined
+            documents: []
         }
 
         this.optionsToMammoth = {
@@ -34,6 +36,7 @@ class UploadFile extends Component{
         this.getDocument = this.getDocument.bind(this)
         this.handleEditorChange = this.handleEditorChange.bind(this)
         this.saveContent = this.saveContent.bind(this)
+        this.forceUpdateHandler = this.forceUpdateHandler.bind(this)
     }
 
     convertToHtml = (e) => {
@@ -47,8 +50,11 @@ class UploadFile extends Component{
 
     getDocument = async () => {
         var documents = await FirebaseService.getDocument( this.state.docId )
+        var documents = objectToArray( documents )
+
         var first = 0
-        var content = getElementOfAJsonObjectInReverse( documents, first ).content
+        var content = getElementOnArrayInReverse( documents, first ).content
+
         this.setState({
             file: content,
             documents: documents
@@ -71,11 +77,18 @@ class UploadFile extends Component{
     saveContent(){
         this.setState({ saveLoading: true })
 
-        let isSaved = FirebaseService.updateDocument( this.state.docId, this.state.content )
-        if (isSaved){
-            console.log('sucesso')
-        }
-        this.setState({ saveLoading: false })
+        let isSaved = FirebaseService.updateDocument( this.state.docId, this.state.content, this.state.userName )
+        
+        this.setState({ 
+            saveLoading: false,
+            saveSuccess: isSaved
+        })
+
+        this.getDocument()
+    }
+
+    forceUpdateHandler(){
+        this.forceUpdate()
     }
 
     render(){
@@ -85,7 +98,7 @@ class UploadFile extends Component{
                 <div className="col-md-12 text-right m-2">
                     <button type="button" className="btn btn-outline-success" onClick={ this.saveContent }>Salvar</button>
                 </div>
-                <div className="col-md-4">
+                <div className="col-md-6">
                     <div className="input-group mb-3">
                         <div className="custom-file">
                             <label className="custom-file-label" htmlFor="inputGroupFile02" aria-describedby="inputGroupFileAddon02">Choose file</label>
@@ -93,12 +106,15 @@ class UploadFile extends Component{
                         </div>
                     </div>
                 </div>
-                <div className="col-md-10">
+                <div className="col-md-8">
                     <TinyEditor 
                         content={ this.state.file } 
                         handleEditorChange= { this.handleEditorChange }
                         username={ this.state.userName }
                     />
+                </div>
+                <div className="col-md-3">
+                    <Histories documents={ this.state.documents }/>
                 </div>
             </div>
         )
