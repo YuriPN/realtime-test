@@ -8,6 +8,8 @@ import { getElementOnArrayInReverse, objectToArray } from '../utils/document'
 import Histories from '../components/histories/histories'
 import HistoryModal from '../components/histories/modal'
 
+import Template from '../components/templates'
+
 class UploadFile extends Component{
     
     constructor(props){
@@ -16,7 +18,7 @@ class UploadFile extends Component{
             file: "",
             content: "",
             docId: "doc1",
-            userName: 'User-' + Math.round((Math.random() * 100) + 1),
+            userName: "User - "+Math.round((Math.random() * 100) + 1),
             saveLoading: false,
             saveMessage: '',
             saveSuccess: undefined,
@@ -51,7 +53,7 @@ class UploadFile extends Component{
 
     getDocument = async () => {
         var documents = await FirebaseService.getDocument( this.state.docId )
-        var documents = objectToArray( documents )
+        documents = objectToArray( documents )
 
         var first = 0
         var content = getElementOnArrayInReverse( documents, first ).content
@@ -93,12 +95,16 @@ class UploadFile extends Component{
     }
 
     render(){
-        
+        if (!this.state.userName){
+            return null
+        }
         return(
             <div id='divMain' className="container-fluid mt-2 justify-content-center row">
                 <div className="col-md-12 text-right m-2">
+                    <button type="button" className="btn btn-outline-success" data-toggle="modal" data-target="#exampleModal">Salvar Modelo</button>
                     <button type="button" className="btn btn-outline-success" onClick={ this.saveContent }>Salvar</button>
                 </div>
+                <Template conteudo={this.state.content}/>
                 <div className="col-md-6">
                     <div className="input-group mb-3">
                         <div className="custom-file">
@@ -111,7 +117,7 @@ class UploadFile extends Component{
                     <TinyEditor 
                         content={ this.state.file } 
                         handleEditorChange= { this.handleEditorChange }
-                        username={ this.state.userName }
+                        username= { this.state.userName }
                     />
                 </div>
                 <div className="col-md-3">

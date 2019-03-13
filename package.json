@@ -5,6 +5,7 @@
   "homepage": "https://YuriPN.github.io/realtime-test/",
   "dependencies": {
     "@tinymce/tinymce-react": "^3.0.1",
+    "diff": "^4.0.1",
     "firebase": "^5.8.6",
     "gh-pages": "^2.0.1",
     "interweave": "^10.1.3",

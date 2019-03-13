@@ -10,6 +10,15 @@ export default class FirebaseService {
 
         return value
     }
+    static getAllData = async(path) =>{
+        const query = firebaseDatabase.ref(path).orderByChild('title')
+
+        const snapshot = await query.once('value')
+
+        const value = snapshot.val()
+
+        return value
+    }
 
     static listenIfChildAdded = (path, id, callback) => {
         const query = firebaseDatabase.ref(path).child(id)
@@ -23,6 +32,14 @@ export default class FirebaseService {
         const document = await this.getOneData(pathOfCollectionDocuments, id)
 
         return document
+    };
+    
+    static getTemplates = async () => {
+        
+        const pathOfCollectionDocuments = 'templates'
+        const documents = await this.getAllData(pathOfCollectionDocuments)
+
+        return documents
     };
 
     static updateDocument = async (idDocument, document, userName) => {
@@ -46,6 +63,23 @@ export default class FirebaseService {
         return true
     }
 
+    static insertTemplate = async(titulo, descricao, conteudo) => {
+        var pathOfCollectionTemplates = 'templates'
+
+        try{
+            var collectionTemplates = firebaseDatabase.ref(pathOfCollectionTemplates)
+            var documentRef = collectionTemplates.push();
+
+            documentRef.set({
+                title:titulo,
+                description:descricao,
+                content:conteudo
+            })
+
+        }catch(error){
+            console.log(error)
+        }
+    }
     static insertHistory = async (idHistory, differences) => {
         var pathOfCollectionHistories = 'histories'
         try {
