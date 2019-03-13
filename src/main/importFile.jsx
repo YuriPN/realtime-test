@@ -7,6 +7,8 @@ import { getElementOnArrayInReverse, objectToArray } from '../utils/document'
 
 import Histories from '../components/histories/histories'
 
+import Template from '../components/templates'
+
 class UploadFile extends Component{
     
     constructor(props){
@@ -50,7 +52,7 @@ class UploadFile extends Component{
 
     getDocument = async () => {
         var documents = await FirebaseService.getDocument( this.state.docId )
-        var documents = objectToArray( documents )
+        documents = objectToArray( documents )
 
         var first = 0
         var content = getElementOnArrayInReverse( documents, first ).content
@@ -96,8 +98,12 @@ class UploadFile extends Component{
         return(
             <div id='divMain' className="container-fluid mt-2 justify-content-center row">
                 <div className="col-md-12 text-right m-2">
+                    <button type="button" className="btn btn-outline-success" data-toggle="modal" data-target="#exampleModal">
+                            Salvar modelo
+                    </button>
                     <button type="button" className="btn btn-outline-success" onClick={ this.saveContent }>Salvar</button>
                 </div>
+                <Template conteudo={this.state.content}/>
                 <div className="col-md-6">
                     <div className="input-group mb-3">
                         <div className="custom-file">
