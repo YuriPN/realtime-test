@@ -10,7 +10,7 @@ export const mergeTexts = (firstText, secondText) => {
 }
 
 export const diferrences = (firstText, secondText) => {
-    return Diff.diffChars(firstText, secondText)
+    return Diff.diffWords(firstText, secondText)
 }
 
 export const differencesWithLocations = ( firstText, secondText) => {
@@ -36,5 +36,5 @@ export const differencesWithLocations = ( firstText, secondText) => {
 }
 
 const hasChange = (diffObject) => {
-    return diffObject.added != undefined || diffObject.removed != undefined ? true : false 
+    return diffObject.added !== undefined || diffObject.removed !== undefined ? true : false 
 }

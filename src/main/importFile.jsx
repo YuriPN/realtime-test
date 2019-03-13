@@ -6,6 +6,7 @@ import TinyEditor from '../components/tiny-editor'
 import { getElementOnArrayInReverse, objectToArray } from '../utils/document'
 
 import Histories from '../components/histories/histories'
+import HistoryModal from '../components/histories/modal'
 
 class UploadFile extends Component{
     
@@ -78,7 +79,7 @@ class UploadFile extends Component{
         this.setState({ saveLoading: true })
 
         let isSaved = FirebaseService.updateDocument( this.state.docId, this.state.content, this.state.userName )
-        
+
         this.setState({ 
             saveLoading: false,
             saveSuccess: isSaved
@@ -116,6 +117,7 @@ class UploadFile extends Component{
                 <div className="col-md-3">
                     <Histories documents={ this.state.documents }/>
                 </div>
+                <HistoryModal documents={ this.state.documents }/>
             </div>
         )
     }

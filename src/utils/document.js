@@ -17,3 +17,10 @@ export const getElementOnArrayInReverse = (array, index) => {
 export const objectToArray = ( object ) => {
     return Object.values( object )
 }
+
+export const isoDateToShortDateWithHours = (dateObject) => {
+    let date = new Date( String( dateObject ) )
+    let dateShortFormat = date.getDay() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear()
+    let hours = date.getHours() + ':' + date.getMinutes()
+    return dateShortFormat + ' ' + hours
+}
