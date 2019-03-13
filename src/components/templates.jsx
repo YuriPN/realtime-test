@@ -18,6 +18,7 @@ class Template extends Component{
 
     saveModel(){
        let saved = FirebaseService.insertTemplate( this.state.titulo, this.state.descricao, this.state.conteudo )
+       
     }
     onChangeTitulo = (e) => {
         this.setState({
@@ -37,6 +38,7 @@ class Template extends Component{
     }
 
     render(){
+        
         return(
             <div>
                 <div className="modal fade" id="exampleModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

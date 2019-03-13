@@ -25,35 +25,36 @@ class TinyEditor extends Component{
             templates: parsed
         })
     }
+    componentWillReceiveProps(props){
 
+    }
     
     render(){
-        
         var waveConfig = this.props.username
-        if( !this.state.templates.length ){
-            return null
-        }
+        if(this.state.templates.length !== 0){
             return(
                 <Editor 
                     value={ this.props.content }
-                    apiKey = '11mawuf4s296afp379jcddiaf0t6bb1buhxyipc2xwzfgeb5'
                     init={{
+                        apiKey:"11mawuf4s296afp379jcddiaf0t6bb1buhxyipc2xwzfgeb5",
                         external_plugins: {"wave": "https://cdn2.codox.io/waveTinymce/plugin.min.js"},
                         wave: {
-                            "docId": "doc2", // unique document id
+                            "docId": "doc2", // unique document id,
                             "username": waveConfig, // unique username or email address
-                            "apiKey": "ee85b096-0af6-46b3-b3f5-4886d2e8a081" // this is your actual API Key
+                            "apiKey": "5bdc0f9f-39eb-4ff1-87f4-87c83f2ca723" // this is your actual API Key
                         },
                         plugins: [
                             'code template autoresize print preview fullpage searchreplace autolink directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern visualblocks autosave'
                         ],
                         contextmenu: "link image imagetools table spellchecker",
-                        toolbar: 'formatselect | bold italic forecolor | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent  | removeformat | template | image | restoredraft',
+                        toolbar: 'formatselect | bold italic forecolor | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent  | removeformat | template | code | restoredraft',
                         templates: this.state.templates
                     }}
                     onEditorChange={ this.props.handleEditorChange }
                 />
             )
+        }
+        else return null
     }
 }
 

@@ -17,7 +17,7 @@ class UploadFile extends Component{
             file: "",
             content: "",
             docId: "doc1",
-            userName: 'User-' + Math.round((Math.random() * 100) + 1),
+            userName: "User - "+Math.round((Math.random() * 100) + 1),
             saveLoading: false,
             saveMessage: '',
             saveSuccess: undefined,
@@ -80,7 +80,7 @@ class UploadFile extends Component{
         this.setState({ saveLoading: true })
 
         let isSaved = FirebaseService.updateDocument( this.state.docId, this.state.content, this.state.userName )
-        
+
         this.setState({ 
             saveLoading: false,
             saveSuccess: isSaved
@@ -94,13 +94,13 @@ class UploadFile extends Component{
     }
 
     render(){
-        
+        if (!this.state.userName){
+            return null
+        }
         return(
             <div id='divMain' className="container-fluid mt-2 justify-content-center row">
                 <div className="col-md-12 text-right m-2">
-                    <button type="button" className="btn btn-outline-success" data-toggle="modal" data-target="#exampleModal">
-                            Salvar modelo
-                    </button>
+                    <button type="button" className="btn btn-outline-success" data-toggle="modal" data-target="#exampleModal">Salvar Modelo</button>
                     <button type="button" className="btn btn-outline-success" onClick={ this.saveContent }>Salvar</button>
                 </div>
                 <Template conteudo={this.state.content}/>
@@ -116,7 +116,7 @@ class UploadFile extends Component{
                     <TinyEditor 
                         content={ this.state.file } 
                         handleEditorChange= { this.handleEditorChange }
-                        username={ this.state.userName }
+                        username= { this.state.userName }
                     />
                 </div>
                 <div className="col-md-3">
