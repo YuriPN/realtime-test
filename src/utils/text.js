@@ -10,8 +10,8 @@ export const mergeTexts = (firstText, secondText) => {
 }
 
 const diffTextColor = ( element ) => {
-    return element.added ? '<span class="text-success">'+element.value+'</span>' :
-    element.removed ? '<span class="text-danger">'+element.value+'</span>' : element.value
+    return element.added ? '<span class="text-white bg-success">'+element.value+'</span>' :
+    element.removed ? '<span class="text-white bg-danger">'+element.value+'</span>' : element.value
 }
 
 export const mergeTextsWithColor = (firstText, secondText) => {
@@ -20,7 +20,6 @@ export const mergeTextsWithColor = (firstText, secondText) => {
     differences.forEach(element => {
         mergedText += diffTextColor(element)
     })
-    console.log( mergeTexts )
     return mergedText
 }
 
