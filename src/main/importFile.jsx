@@ -55,6 +55,8 @@ class UploadFile extends Component{
         var documents = await FirebaseService.getDocument( this.state.docId )
         documents = objectToArray( documents )
 
+        console.log('Documento Veio')
+
         var first = 0
         var content = getElementOnArrayInReverse( documents, first ).content
 
@@ -74,7 +76,8 @@ class UploadFile extends Component{
     }
 
     handleEditorChange(content){
-        this.setState({ content: content })
+        this.state.content = content
+        //this.setState({ content: content })
     }
 
     saveContent(){
@@ -121,9 +124,9 @@ class UploadFile extends Component{
                     />
                 </div>
                 <div className="col-md-3">
-                    <Histories documents={ this.state.documents }/>
+                    <Histories documents={ this.state.documents } limit={ 5 }/>
                 </div>
-                <HistoryModal documents={ this.state.documents }/>
+                <HistoryModal documents={ this.state.documents } limit={ 5 }/>
             </div>
         )
     }
