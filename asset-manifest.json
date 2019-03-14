@@ -1,13 +1,13 @@
 {
   "main.css": "/realtime-test/static/css/main.4df217b7.chunk.css",
-  "main.js": "/realtime-test/static/js/main.8288b5e0.chunk.js",
-  "main.js.map": "/realtime-test/static/js/main.8288b5e0.chunk.js.map",
+  "main.js": "/realtime-test/static/js/main.65aa3078.chunk.js",
+  "main.js.map": "/realtime-test/static/js/main.65aa3078.chunk.js.map",
   "runtime~main.js": "/realtime-test/static/js/runtime~main.d05d9428.js",
   "runtime~main.js.map": "/realtime-test/static/js/runtime~main.d05d9428.js.map",
   "static/js/2.c3ec34e9.chunk.js": "/realtime-test/static/js/2.c3ec34e9.chunk.js",
   "static/js/2.c3ec34e9.chunk.js.map": "/realtime-test/static/js/2.c3ec34e9.chunk.js.map",
   "index.html": "/realtime-test/index.html",
-  "precache-manifest.1cca8210c9dbed56858547de2f7f14ef.js": "/realtime-test/precache-manifest.1cca8210c9dbed56858547de2f7f14ef.js",
+  "precache-manifest.26b41f3cdb9a4baac2311539ccc6fe5d.js": "/realtime-test/precache-manifest.26b41f3cdb9a4baac2311539ccc6fe5d.js",
   "service-worker.js": "/realtime-test/service-worker.js",
   "static/css/main.4df217b7.chunk.css.map": "/realtime-test/static/css/main.4df217b7.chunk.css.map"
 }
