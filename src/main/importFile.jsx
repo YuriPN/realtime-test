@@ -55,8 +55,6 @@ class UploadFile extends Component{
         var documents = await FirebaseService.getDocument( this.state.docId )
         documents = objectToArray( documents )
 
-        console.log('Documento Veio')
-
         var first = 0
         var content = getElementOnArrayInReverse( documents, first ).content
 
@@ -76,8 +74,7 @@ class UploadFile extends Component{
     }
 
     handleEditorChange(content){
-        this.state.content = content
-        //this.setState({ content: content })
+        this.setState({ content: content })
     }
 
     saveContent(){

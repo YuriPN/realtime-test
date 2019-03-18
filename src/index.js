@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import Router from './route'
-import FileUploader from './main/importFile'
 import './index.css';
 
 import * as serviceWorker from './serviceWorker';

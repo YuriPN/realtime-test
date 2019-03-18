@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser'
+import ReactHtmlParser from 'react-html-parser'
 
 import { isoDateToShortDateWithHours } from '../../utils/document'
-import { diferrences, mergeTextsWithColor } from '../../utils/text'
 
 import { Modal } from '../modal'
+
+import diff from './htmldiff'
 
 export default class HistoryModal extends Component {
     constructor( props ){
@@ -13,14 +14,8 @@ export default class HistoryModal extends Component {
         this.state = {
             documentsDiff: []
         }
-
-        this.documentWithChanges = this.documentWithChanges.bind(this)
     }
 
-    documentWithChanges(currentDocument, previousDocument){
-        return diferrences(currentDocument, previousDocument)
-    }
-    
     existDocument( documents, index ){
         return documents.length > index + 1
     }
@@ -33,10 +28,7 @@ export default class HistoryModal extends Component {
             if( index < this.props.limit ){
                 let currentDocument = document.content
                 let previousDocument = this.existDocument( documents, index + 1 ) ? documents[ index + 1 ].content : ''
-
-                //console.log(currentDocument)
-                //console.log(previousDocument)
-                let mergedText = mergeTextsWithColor( previousDocument, currentDocument)
+                let mergedText = diff( previousDocument, currentDocument)
 
                 return (
                     <Modal key={ index } id={ 'modal'+index } title={ date }>
@@ -44,6 +36,7 @@ export default class HistoryModal extends Component {
                     </Modal>
                 )
             }
+            return null
         })
 
         return (

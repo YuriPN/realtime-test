@@ -30,7 +30,6 @@ class TinyEditor extends Component{
     }
     
     render(){
-        var waveConfig = this.props.username
         if(this.state.templates.length !== 0){
             return(
                 <Editor 
@@ -40,14 +39,14 @@ class TinyEditor extends Component{
                         external_plugins: {"wave": "https://cdn2.codox.io/waveTinymce/plugin.min.js"},
                         wave: {
                             "docId": "doc2", // unique document id,
-                            "username": waveConfig, // unique username or email address
+                            "username": this.props.username, // unique username or email address
                             "apiKey": "5bdc0f9f-39eb-4ff1-87f4-87c83f2ca723" // this is your actual API Key
                         },
                         plugins: [
-                            'code template autoresize print preview fullpage searchreplace autolink directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern visualblocks autosave'
+                            'textcolor code template autoresize print preview fullpage searchreplace autolink directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern visualblocks autosave'
                         ],
                         contextmenu: "link image imagetools table spellchecker",
-                        toolbar: 'formatselect | bold italic forecolor | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent  | removeformat | template | code | restoredraft',
+                        toolbar: 'fontselect | bold italic fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent  | removeformat | template | code | restoredraft',
                         templates: this.state.templates
                     }}
                     onEditorChange={ this.props.handleEditorChange }
