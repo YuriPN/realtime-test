@@ -42,15 +42,6 @@ class UploadFile extends Component{
         this.forceUpdateHandler = this.forceUpdateHandler.bind(this)
     }
 
-    convertToHtml = (e) => {
-        mammoth.convertToHtml({arrayBuffer: e.target.result}, this.optionsToMammoth)
-                .then( (result) =>{
-                    this.setState({
-                        file: result.value
-                    })
-                })
-    }
-
     getDocument = async () => {
         var documents = await FirebaseService.getDocument( this.state.docId )
         documents = objectToArray( documents )
@@ -71,6 +62,15 @@ class UploadFile extends Component{
         reader.onload = this.convertToHtml
         
         reader.readAsArrayBuffer(file)
+    }
+
+    convertToHtml = (e) => {
+        mammoth.convertToHtml({arrayBuffer: e.target.result}, this.optionsToMammoth)
+                .then( (result) =>{
+                    this.setState({
+                        file: result.value
+                    })
+                })
     }
 
     handleEditorChange(content){
@@ -108,7 +108,7 @@ class UploadFile extends Component{
                 <div className="col-md-6">
                     <div className="input-group mb-3">
                         <div className="custom-file">
-                            <label className="custom-file-label" htmlFor="inputGroupFile02" aria-describedby="inputGroupFileAddon02">Choose file</label>
+                            <label className="custom-file-label" htmlFor="inputGroupFile02">Choose file</label>
                             <input type="file" id="FileUpload" className="custom-file-input" onChange={ this.handleFile }/>
                         </div>
                     </div>

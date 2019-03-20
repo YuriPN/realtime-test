@@ -24,7 +24,6 @@ export default class HistoryModal extends Component {
 
         const listModal = this.props.documents.map(( document, index, documents ) => {
             let date = isoDateToShortDateWithHours( document.created )
-
             if( index < this.props.limit ){
                 let currentDocument = document.content
                 let previousDocument = this.existDocument( documents, index + 1 ) ? documents[ index + 1 ].content : ''

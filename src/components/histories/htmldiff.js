@@ -58,7 +58,7 @@ html_to_tokens = function(html) {
           }
           current_word = char;
           mode = 'whitespace';
-        } else if (/[\w\#@]+/i.test(char)) {
+        } else if (/[\w@]+/i.test(char)) {
           current_word += char;
         } else {
           if (current_word) {

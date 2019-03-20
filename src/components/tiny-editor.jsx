@@ -25,9 +25,6 @@ class TinyEditor extends Component{
             templates: parsed
         })
     }
-    componentWillReceiveProps(props){
-
-    }
     
     render(){
         if(this.state.templates.length !== 0){
@@ -35,6 +32,8 @@ class TinyEditor extends Component{
                 <Editor 
                     value={ this.props.content }
                     init={{
+                        language_url: 'https://olli-suutari.github.io/tinyMCE-4-translations/pt_BR.js',
+                        language:'pt_BR',
                         apiKey:"11mawuf4s296afp379jcddiaf0t6bb1buhxyipc2xwzfgeb5",
                         external_plugins: {"wave": "https://cdn2.codox.io/waveTinymce/plugin.min.js"},
                         wave: {
