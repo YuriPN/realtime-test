@@ -13,6 +13,7 @@ class Router extends Component {
                 <Route path="/realtime-test/editor" exact={true} component={UploadFile} />
                 <Route path="/realtime-test/editor/:documentId/version/:currentDocumentId/:previousDocumentId" component={HistoryVersion} />
                 <Route path='*' component={UploadFile} />
+                <Route path='realtime-test/editor/language/pt_BR.js' ></Route>
             </Switch>
         </ BrowserRouter>
     );
