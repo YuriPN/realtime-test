@@ -1,4 +1,4 @@
-import {firebaseDatabase} from '../utils/firebaseUtils'
+import {firebaseDatabase, firebaseStorage} from '../utils/firebaseUtils'
 
 export default class FirebaseService {
 
@@ -80,6 +80,7 @@ export default class FirebaseService {
             console.log(error)
         }
     }
+
     static insertHistory = async (idHistory, differences) => {
         var pathOfCollectionHistories = 'histories'
         try {
@@ -97,6 +98,15 @@ export default class FirebaseService {
             return false
         }
         return true
+    }
+
+    static uploadImage = (filename, blob) => {  
+        try{
+            firebaseStorage.ref().child("images/"+filename).put(blob);
+        }catch(error){
+            console.log(error);
+        }
+
     }
 
 }

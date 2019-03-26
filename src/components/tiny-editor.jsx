@@ -32,7 +32,7 @@ class TinyEditor extends Component{
                 <Editor 
                     value={ this.props.content }
                     init={{
-                        language_url: '/pt_BR.js',
+                        language_url: '/languages/pt_BR.js',
                         language:'pt_BR',
                         apiKey:"11mawuf4s296afp379jcddiaf0t6bb1buhxyipc2xwzfgeb5",
                         external_plugins: {"wave": "https://cdn2.codox.io/waveTinymce/plugin.min.js"},
@@ -46,7 +46,11 @@ class TinyEditor extends Component{
                         ],
                         contextmenu: "link image imagetools table spellchecker",
                         toolbar: 'fontselect | bold italic fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent  | removeformat | template | code | restoredraft',
-                        templates: this.state.templates
+                        templates: this.state.templates,
+                        images_upload_handler: function (blobInfo, success, failure) {
+                            FirebaseService.uploadImage(blobInfo.filename(), blobInfo.blob());
+                            success('https://firebasestorage.googleapis.com/v0/b/az-editor-online.appspot.com/o/images%2F'+blobInfo.filename()+'?alt=media');
+                        }
                     }}
                     onEditorChange={ this.props.handleEditorChange }
                 />
