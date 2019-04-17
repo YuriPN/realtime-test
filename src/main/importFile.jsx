@@ -1,123 +1,113 @@
 import React, {Component} from 'react'
-import mammoth from 'mammoth'
 
+import socket from '../server/server-client'
 import FirebaseService from '../services/firebaseService'
 import TinyEditor from '../components/tiny-editor'
-import { getElementOnArrayInReverse, objectToArray } from '../utils/document'
+import { objectToArray } from '../utils/document'
+
+import ChatWidget from '../components/chat';
 
 import Histories from '../components/histories/histories'
 import HistoryModal from '../components/histories/modal'
 
-import Template from '../components/templates'
+import Users from '../components/users'
 
 class UploadFile extends Component{
     
     constructor(props){
         super(props)
+        this.tyeditor = React.createRef();
         this.state = {
-            file: "",
-            content: "",
             docId: "doc1",
-            userName: "User - "+Math.round((Math.random() * 100) + 1),
-            saveLoading: false,
-            saveMessage: '',
-            saveSuccess: undefined,
-            documents: []
+            user: Math.round((Math.random() * 100) + 1)+" - User",
+            documents: [],
+            users:[],
+            color: '',
+            isUpdateUser:null
         }
+        this.getDocument();
 
-        this.optionsToMammoth = {
-            styleMap: [
-                "p[style-name='Section Title'] => h1:fresh",
-                "p[style-name='Subsection Title'] => h2:fresh"
-            ]
-        }
-
-        this.getDocument()
-
-        this.handleFile = this.handleFile.bind(this)
-        this.convertToHtml = this.convertToHtml.bind(this)
+        this.newUserConnect = this.newUserConnect.bind(this)
+        this.addOldUsers = this.addOldUsers.bind(this)
+        this.removeUser = this.removeUser.bind(this)
         this.getDocument = this.getDocument.bind(this)
-        this.handleEditorChange = this.handleEditorChange.bind(this)
-        this.saveContent = this.saveContent.bind(this)
-        this.forceUpdateHandler = this.forceUpdateHandler.bind(this)
+
+        socket.emit('user connect', {
+            user: this.state.user,
+            docId: this.state.docId,
+            color: this.state.color
+        });
+
+        socket.on('new user', this.newUserConnect)
+        socket.on('users on room', this.addOldUsers)
+        socket.on('user disconnected', this.removeUser)
     }
 
     getDocument = async () => {
         var documents = await FirebaseService.getDocument( this.state.docId )
         documents = objectToArray( documents )
-
-        var first = 0
-        var content = getElementOnArrayInReverse( documents, first ).content
-
         this.setState({
-            file: content,
             documents: documents
         })
     }
     
-    handleFile = (e) =>{
-        var file = e.target.files[0]
-        var reader = new FileReader()
-
-        reader.onload = this.convertToHtml
-        
-        reader.readAsArrayBuffer(file)
+    
+    removeUser(user){
+        var localUsers = this.state.users
+        var newUsers = localUsers.filter( (localUser) => localUser.name !== user.name )
+        this.setState({
+          users: newUsers
+        })
+      }
+    
+    addOldUsers(users){
+        if(this.state.isUpdateUser === null){
+            var localUsers = this.state.users
+            users.forEach(user => {
+                localUsers.push(user)
+            })
+            this.setState({
+                users: localUsers,
+                isUpdateUser:1
+            })
+            
+        }
     }
 
-    convertToHtml = (e) => {
-        mammoth.convertToHtml({arrayBuffer: e.target.result}, this.optionsToMammoth)
-                .then( (result) =>{
-                    this.setState({
-                        file: result.value
-                    })
-                })
-    }
-
-    handleEditorChange(content){
-        this.setState({ content: content })
-    }
-
-    saveContent(){
-        this.setState({ saveLoading: true })
-
-        let isSaved = FirebaseService.updateDocument( this.state.docId, this.state.content, this.state.userName )
-
-        this.setState({ 
-            saveLoading: false,
-            saveSuccess: isSaved
+    newUserConnect(user){
+        var users = this.state.users
+        var toUser = user.clientId
+        socket.emit('others users on room', {
+            users,
+            toUser,
         })
 
-        this.getDocument()
-    }
+        users.push(user)
 
-    forceUpdateHandler(){
-        this.forceUpdate()
+        this.setState({
+            users: users,
+            color: user.color
+        })
+
+        this.tyeditor.current.sendContent();
     }
 
     render(){
-        if (!this.state.userName){
+        if (!this.state.user){
             return null
         }
         return(
             <div id='divMain' className="container-fluid mt-2 justify-content-center row">
-                <div className="col-md-12 text-right m-2">
-                    <button type="button" className="btn btn-outline-success" data-toggle="modal" data-target="#exampleModal">Salvar Modelo</button>
-                    <button type="button" className="btn btn-outline-success" onClick={ this.saveContent }>Salvar</button>
-                </div>
-                <Template conteudo={this.state.content}/>
-                <div className="col-md-6">
-                    <div className="input-group mb-3">
-                        <div className="custom-file">
-                            <label className="custom-file-label" htmlFor="inputGroupFile02">Choose file</label>
-                            <input type="file" id="FileUpload" className="custom-file-input" onChange={ this.handleFile }/>
-                        </div>
-                    </div>
-                </div>
                 <div className="col-md-8">
+                    <Users users={ this.state.users }/>
                     <TinyEditor 
-                        content={ this.state.file } 
-                        handleEditorChange= { this.handleEditorChange }
-                        username= { this.state.userName }
+                        ref = { this.tyeditor }
+                        docId = { this.state.docId }
+                        user = { this.state.user }
+                        users = { this.state.users }
+                    />
+                    <ChatWidget 
+                        id = {this.state.docId}
                     />
                 </div>
                 <div className="col-md-3">

@@ -103,6 +103,7 @@ export default class FirebaseService {
     static uploadImage = (filename, blob) => {  
         try{
             firebaseStorage.ref().child("images/"+filename).put(blob);
+
         }catch(error){
             console.log(error);
         }
