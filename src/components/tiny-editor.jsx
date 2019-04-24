@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Editor} from '@tinymce/tinymce-react';
 
-import diff from './histories/htmldiff'
+import diff from '../utils/htmldiff'
 
 import FirebaseService from '../services/firebaseService';
 
@@ -20,8 +20,7 @@ class TinyEditor extends Component{
         this.state ={
             content:'',
             templates: [],
-            saveLoading: false,
-            bm:''
+            bookmark:''
         }
         this.optionsToMammoth = {
             styleMap: [
@@ -31,7 +30,7 @@ class TinyEditor extends Component{
         }
         this.getTemplates();
 
-        this.sendContent = this.sendContent.bind(this)
+        this.sendContentToNewUser = this.sendContentToNewUser.bind(this)
         this.getTemplates = this.getTemplates.bind(this);
         this.handleEditorChange = this.handleEditorChange.bind(this);
         this.updateDocument = this.updateDocument.bind(this);
@@ -40,6 +39,7 @@ class TinyEditor extends Component{
         this.saveContent = this.saveContent.bind(this)
         this.emitChange = this.emitChange.bind(this)
         this.setContent = this.setContent.bind(this)
+        this.beforeContent = this.beforeContent.bind(this)
 
         socket.on('update document', this.updateDocument);
     }
@@ -48,7 +48,7 @@ class TinyEditor extends Component{
         var documents = await FirebaseService.getTemplates() 
 
         var parsed = objectToArray(documents)
-
+        console.log(parsed)
         this.setState({
             templates: parsed
         })
@@ -63,11 +63,6 @@ class TinyEditor extends Component{
         reader.readAsArrayBuffer(file)
     }
 
-    sendContent(){
-        if(this.state.content !== '')
-            socket.emit('document change', this.state.content);
-    }
-
     convertToHtml = (e) => {
         mammoth.convertToHtml({arrayBuffer: e.target.result}, this.optionsToMammoth)
             .then( (result) =>{
@@ -76,22 +71,10 @@ class TinyEditor extends Component{
                 })
             })
     }
+    
 
     saveContent () {
         FirebaseService.updateDocument( this.props.docId, this.state.content, this.props.user )
-    }
-
-    updateDocument(innerhtml){
-        var diffText  = diff(this.state.content, innerhtml) 
-        var mergedHtml = diffText.replace(/<(DEL|del)[^>]*>[^<]*(<\/DEL>|<\/del>)|<(del|ins)>|<(\/del|\/ins)>/ig, '');
-        if(this.state.content === ''){
-            this.setState({
-                content:innerhtml
-            })
-        }
-        this.setState({
-            content: mergedHtml
-        })
     }
     
     handleEditorChange(text){
@@ -100,17 +83,47 @@ class TinyEditor extends Component{
         })
     }
 
+    //emissor
+    sendContentToNewUser(){
+        if(this.state.content !== '')
+            socket.emit('document change', this.state.content);
+    }
+
     emitChange(){
         var content = this.editor.current.editor.getContent()
         var bookm = this.editor.current.editor.selection.getBookmark(2, true)
         this.setState({
-            bm:bookm
+            bookmark:bookm
         })
         socket.emit('document change', content)
     }
 
+    //Receptor
+    updateDocument(innerhtml){
+        var diffContent = diff(this.state.content, innerhtml) 
+        var mergedHtml = diffContent.replace(/<(DEL|del)[^>]*>[^<]*(<\/DEL>|<\/del>)|<(del|ins)>|<(\/del|\/ins)>/ig, '');
+
+        if(this.state.content === ''){
+            this.setState({
+                content:innerhtml
+            })
+        }
+        else{
+            this.setState({
+                content: mergedHtml
+            })
+        }
+    }
+
     setContent(){
-        this.editor.current.editor.selection.moveToBookmark(this.state.bm)
+        this.editor.current.editor.selection.moveToBookmark(this.state.bookmark)
+    }
+    
+    beforeContent(event){
+        var currentContent = this.editor.current.editor.getContent()
+        this.setState({
+            content : currentContent
+        })
     }
 
     render(){
@@ -132,23 +145,28 @@ class TinyEditor extends Component{
                     <Editor ref = {this.editor}
                         value={ this.state.content }
                         init={{
-                            language_url: '/languages/pt_BR.js',
+                            language_url: 'https://yuripn.github.io/realtime-test/languages/pt_BR.js',
                             language:'pt_BR',
-                            apiKey:"11mawuf4s296afp379jcddiaf0t6bb1buhxyipc2xwzfgeb5",
                             plugins: [
                                 'textcolor code template autoresize print preview fullpage searchreplace autolink directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern visualblocks autosave'
                             ],
                             contextmenu: "link image imagetools table spellchecker",
-                            toolbar: 'fontselect | bold italic fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent  | removeformat | template | code | restoredraft',
+                            toolbar: 'fontselect | bold italic fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent  | removeformat | template | code | restoredraft | link',
+                            link_context_toolbar: true,
                             templates: this.state.templates,
                             min_height: 400, 
                             images_upload_handler: function (blobInfo, success, failure) {
-                                success(blobInfo.blob());
-                            }
+                                setTimeout(function () {
+                                    FirebaseService.uploadImage(blobInfo.filename(), blobInfo.blob())
+                                    success('https://firebasestorage.googleapis.com/v0/b/az-editor-online.appspot.com/o/images%2F'+blobInfo.filename()+'?alt=media')
+                                }, 2000);   
+                            },
+                            autosave_interval: "15s"
                         }}
                         onSetContent = { this.setContent }
                         onKeyUp = { this.emitChange }
                         onEditorChange = { this.handleEditorChange }
+                        onBeforeSetContent = { this.beforeContent }
                     />
                     <Template conteudo={this.state.content}/>
                 </div>

@@ -51,7 +51,6 @@ class UploadFile extends Component{
         })
     }
     
-    
     removeUser(user){
         var localUsers = this.state.users
         var newUsers = localUsers.filter( (localUser) => localUser.name !== user.name )
@@ -70,7 +69,6 @@ class UploadFile extends Component{
                 users: localUsers,
                 isUpdateUser:1
             })
-            
         }
     }
 
@@ -89,7 +87,7 @@ class UploadFile extends Component{
             color: user.color
         })
 
-        this.tyeditor.current.sendContent();
+        this.tyeditor.current.sendContentToNewUser();
     }
 
     render(){

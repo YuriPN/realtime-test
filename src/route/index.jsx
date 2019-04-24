@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 
-import UploadFile from '../main/importFile'
+import UploadFile from '../main/main'
 import HistoryVersion from '../components/version'
 
 class Router extends Component {

@@ -17,9 +17,8 @@ class Template extends Component{
     }
 
     saveModel(){
-        console.log(this.state.conteudo)
         FirebaseService.insertTemplate( this.state.titulo, this.state.descricao, this.state.conteudo )
-       
+        alert('Salvo com sucesso')
     }
     onChangeTitulo = (e) => {
         this.setState({

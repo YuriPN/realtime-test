@@ -5,7 +5,7 @@ import { isoDateToShortDateWithHours } from '../../utils/document'
 
 import { Modal } from '../modal'
 
-import diff from './htmldiff'
+import diff from '../../utils/htmldiff'
 
 export default class HistoryModal extends Component {
     constructor( props ){
